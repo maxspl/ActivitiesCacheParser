@@ -264,6 +264,16 @@ GitHub: https://github.com/bolisettynihith/ActivitiesCacheParser/
     ''')
 
     file_in = str(input_db)
+
+    # Extract username from the file path
+    parts = os.path.normpath(file_in).split(os.sep)
+    username = None
+    if "Users" in parts:
+        idx = parts.index("Users")
+        if idx + 1 < len(parts):
+            username = parts[idx + 1]
+    print(f"[+] Detected username: {username}")
+
     db = sqlite3.connect(file_in)
     cursor = db.cursor()
 
@@ -274,17 +284,26 @@ GitHub: https://github.com/bolisettynihith/ActivitiesCacheParser/
     print('\n[+] Starting Report generation\n')
 
     if(len(activityTable) > 0):
-        generateCSVReport(activityTable, output_folder, 'ActivityCache_Activity.csv')
+        if username:
+            generateCSVReport(activityTable, output_folder, f'{username}_ActivityCache_Activity.csv')
+        else:
+            generateCSVReport(activityTable, output_folder, 'ActivityCache_Activity.csv')
     else:
         print('[+] No data found in Activity table')
 
     if(len(operationTable) > 0):
-        generateCSVReport(operationTable, output_folder, 'ActivityCache_ActivityOperation.csv')
+        if username:
+            generateCSVReport(operationTable, output_folder,  f'{username}_ActivityCache_ActivityOperation.csv')
+        else:
+            generateCSVReport(operationTable, output_folder, 'ActivityCache_ActivityOperation.csv')
     else:
         print('[+] No data found in Operation table')
     
     if(len(packageID) > 0):
-        generateCSVReport(packageID, output_folder, 'ActivityCache_ActivityPackageID.csv')
+        if username:
+            generateCSVReport(packageID, output_folder, f'{username}_ActivityCache_ActivityPackageID.csv')
+        else:
+            generateCSVReport(packageID, output_folder, 'ActivityCache_ActivityPackageID.csv')
     else:
         print('[+] No data found in Operation table')
 
